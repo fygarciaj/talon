@@ -12,7 +12,7 @@ var path = require('path');
 var app = express();
 
 // all environments
-app.set('port', process.env.PORT || 3002);
+app.set('port', 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(express.favicon());
@@ -33,16 +33,16 @@ app.get('/users', user.list);
 
 
 
-http.createServer(app).listen(app.get('port'), function() {
+var server = http.createServer(app).listen(app.get('port'), function() {
     console.log('Express server listening on port ' + app.get('port'));
     var open = require('open');
     open('http://localhost:' + app.get('port') + '');
 
 });
 
-var io = require('socket.io').listen(app);
+var socket = require('socket.io').listen(server);
 
-io.on('connection', function(socket) {
+socket.on('connection', function(socket) {
     console.log('conection on');
     socket.emit('respuesta', {
         message: 'Conectado al servidor'
